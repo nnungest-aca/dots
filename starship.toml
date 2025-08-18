@@ -262,6 +262,7 @@ disabled = true
 #
 [custom.novenv]
 description = "show indicator when venv is missing"
+shell = ['fish', '-c']
 command = """
 if test -f "requirements.txt" -o -f "pyproject.toml" -o -f "poetry.lock" -o -d ".venv" -o -f "Pipfile"
     echo "(inactive)"
@@ -274,7 +275,7 @@ format = '[$output ](red)'
 description = "Show qualified virtualenv dir, if not IN the dir tree where it is resides"
 # from directory ../project-name/, . ~/some/other/.venv/bin/activate -- displays 'other/.venv'
 # from directory .../other/src, .../other, etc. , -- displays just .venv
-# shell = ['fish', '-c']
+shell = ['fish', '-c']
 command = """
     set -lx venv (path basename (path dirname (test -n "$VIRTUAL_ENV" && echo "$VIRTUAL_ENV")))
     test -n "$venv" && echo $venv
@@ -307,7 +308,8 @@ powershell_indicator = ' \[pwsh_\]'
 nu_indicator = ' \[nu\]'
 bash_indicator = ' \[bash\]'
 unknown_indicator = 'mystery shell'
-elvish_indicator = ' elv'
+elvish_indicator = ' \[elv\]'
+zsh_indicator = ' \[zsh\]'
 style = 'cyan bold'
 disabled = false
 
