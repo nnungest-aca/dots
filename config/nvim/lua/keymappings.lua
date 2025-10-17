@@ -1,5 +1,6 @@
 -- set leader key to space
 vim.api.nvim_set_keymap("n", "<Space>", "<Nop>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("v", "<Space>", "<Nop>", { noremap = true, silent = true })
 vim.g.mapleader = " "
 
 --  _
@@ -22,6 +23,8 @@ vim.api.nvim_set_keymap(
 -- navigation like in emacs
 vim.api.nvim_set_keymap("n", "<C-e>", "$", { noremap = true, desc = "End of Line" })
 vim.api.nvim_set_keymap("n", "<C-a>", "^", { noremap = true, desc = "Start of Line" })
+vim.api.nvim_set_keymap("n", "<leader>ni", "<C-a>", { noremap = true, desc = "Increment Number" })
+vim.api.nvim_set_keymap("n", "<leader>nd", "<C-x>", { noremap = true, desc = "Decrement Number" })
 
 -- files
 wk.add({ { "<leader>f", group = "File" } })
@@ -46,10 +49,10 @@ vim.api.nvim_set_keymap("n", "<leader>bp", ":bp<CR>", { noremap = true, desc = "
 vim.api.nvim_set_keymap("n", "<leader>bn", ":bn<CR>", { noremap = true, desc = "Next Buffer" })
 vim.api.nvim_set_keymap("n", "<leader>bd", ":bd<CR>", { noremap = true, desc = "Delete Buffer" })
 vim.api.nvim_set_keymap("n", "<leader>br", ":edit!<CR>", { noremap = true, desc = "Revert Buffer" })
+vim.api.nvim_set_keymap("n", "<leader>bN", ":enew<CR>", { noremap = true, desc = "New Buffer" })
 
 -- code
 wk.add({ { "<leader>c", group = "Code" } })
--- vim.api.nvim_set_keymap("n", "<leader>cf", ":LspZeroFormat<CR>", { noremap = true, desc = "Format" })
 vim.api.nvim_set_keymap("n", "<leader>cr", ":Rg<CR>", { noremap = true, desc = "Rg" })
 vim.api.nvim_set_keymap("n", "<leader>ct", ":Tags<CR>", { noremap = true, desc = "Tags" })
 vim.api.nvim_set_keymap("n", "<leader>cm", ":Marks<CR>", { noremap = true, desc = "Marks" })
