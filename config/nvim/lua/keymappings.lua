@@ -49,7 +49,7 @@ vim.api.nvim_set_keymap("n", "<leader>br", ":edit!<CR>", { noremap = true, desc 
 
 -- code
 wk.add({ { "<leader>c", group = "Code" } })
-vim.api.nvim_set_keymap("n", "<leader>cf", ":LspZeroFormat<CR>", { noremap = true, desc = "Format" })
+-- vim.api.nvim_set_keymap("n", "<leader>cf", ":LspZeroFormat<CR>", { noremap = true, desc = "Format" })
 vim.api.nvim_set_keymap("n", "<leader>cr", ":Rg<CR>", { noremap = true, desc = "Rg" })
 vim.api.nvim_set_keymap("n", "<leader>ct", ":Tags<CR>", { noremap = true, desc = "Tags" })
 vim.api.nvim_set_keymap("n", "<leader>cm", ":Marks<CR>", { noremap = true, desc = "Marks" })

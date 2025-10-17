@@ -22,16 +22,6 @@
 
 require("settings")
 
--- vim.lsp.start({
--- 	name = "lua-language-server",
--- 	cmd = { "lua-language-server" },
--- 	root_dir = vim.fs.dirname(vim.fs.find({ ".git", ".vim", "nvim" }, { upward = true })[1]),
--- 	settings = { Lua = { diagnostics = { globals = { "vim" } } } },
--- })
-
--- set font
--- vim.opt.guifont = "FiraCode Nerd Font:h12"
-
 local group_cdpwd = vim.api.nvim_create_augroup("group_cdpwd", { clear = true })
 vim.api.nvim_create_autocmd("VimEnter", {
 	group = group_cdpwd,
@@ -138,21 +128,98 @@ require("lazy").setup({
 			})
 		end,
 	},
+       {
+        "hrsh7th/nvim-cmp",
+        version = false,
+        event = "InsertEnter",
+        dependencies = {
+        "hrsh7th/cmp-nvim-lsp",
+        "hrsh7th/cmp-buffer",
+        "hrsh7th/cmp-path",
+        },
+    opts = function()
+    -- Register nvim-cmp lsp capabilities
+    vim.lsp.config("*", { capabilities = require("cmp_nvim_lsp").default_capabilities() })
+
+    vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
+    local cmp = require("cmp")
+    local defaults = require("cmp.config.default")()
+    local auto_select = true
+    return {
+        auto_brackets = {}, -- configure any filetype to auto add brackets
+        completion = {
+        completeopt = "menu,menuone,noinsert" .. (auto_select and "" or ",noselect"),
+        },
+        preselect = auto_select and cmp.PreselectMode.Item or cmp.PreselectMode.None,
+        mapping = cmp.mapping.preset.insert({
+        ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+        ["<C-f>"] = cmp.mapping.scroll_docs(4),
+        ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+        ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+        ["<C-Space>"] = cmp.mapping.complete(),
+        ["<CR>"] = cmp.mapping.confirm({ select = auto_select }),
+        ["<C-y>"] = cmp.mapping.confirm({ select = true }),
+        ["<S-CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+        ["<C-CR>"] = function(fallback)
+            cmp.abort()
+            fallback()
+        end,
+        -- ["<tab>"] = function(fallback)
+        --     return cmp.map({ "snippet_forward", "ai_nes", "ai_accept" }, fallback)()
+        -- end,
+        -- }),
+
+        ["<tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
+            else
+                fallback()
+            end
+        end, { "i", "s" }),
+        }),
+        sources = cmp.config.sources({
+        { name = "lazydev" },
+        { name = "nvim_lsp" },
+        { name = "path" },
+        }, {
+        { name = "buffer" },
+        }),
+        formatting = {
+        format = function(entry, item)
+            -- local icons = LazyVim.config.icons.kinds
+            -- if icons[item.kind] then
+            -- item.kind = icons[item.kind] .. item.kind
+            -- end
+
+            local widths = {
+            abbr = vim.g.cmp_widths and vim.g.cmp_widths.abbr or 40,
+            menu = vim.g.cmp_widths and vim.g.cmp_widths.menu or 30,
+            }
+
+            for key, width in pairs(widths) do
+            if item[key] and vim.fn.strdisplaywidth(item[key]) > width then
+                item[key] = vim.fn.strcharpart(item[key], 0, width - 1) .. "…"
+            end
+            end
+
+            return item
+        end,
+        },
+        experimental = {
+        -- only show ghost text when we show ai completions
+        ghost_text = vim.g.ai_cmp and {
+            hl_group = "CmpGhostText",
+        } or false,
+        },
+        sorting = defaults.sorting,
+    }
+    end,
+    },
+
 	-- lsp packages
 	{ "williamboman/mason.nvim" },
 	-- lsp packages
 	{ "williamboman/mason-lspconfig.nvim" },
-	-- lsp packages
-	{
-		"VonHeikemen/lsp-zero.nvim",
-		branch = "v3.x",
-		dependencies = {
-			"neovim/nvim-lspconfig",
-			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/nvim-cmp",
-			"L3MON4D3/LuaSnip",
-		},
-	},
 	-- END lsp packages
 
 	-- autoformat: conform.nvim
@@ -199,46 +266,27 @@ require("toggleterm").setup({
 	size = 20,
 })
 
--- Mason --
-local lsp_zero = require("lsp-zero")
-require("mason").setup()
-require("mason-lspconfig").setup({
-	handlers = { lsp_zero.default_setup },
-	-- see the following link for more server configurations
-	-- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
-	ensure_installed = { "bashls", "lua_ls", "ts_ls", "rust_analyzer" },
-})
-lsp_zero.format_on_save = {
-	servers = { "bashls", "lua_ls", "ts_ls", "rust_analyzer" },
-}
 -- LSP --
-require("lsp")
-
--- TREE-SITTER --
-require("nvim-treesitter.configs").setup({
-	ensure_installed = { "typescript", "c", "lua", "vim", "vimdoc", "query" },
-	sync_install = false,
-	auto_install = true,
-	ignore_install = { "go" },
-	highlight = {
-		enable = true,
-		disable = function(lang, buf)
-			local max_filesize = 100 * 1024 -- 100 KB
-			local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-			if (lang == "c") or (lang == "rust") then
-				return true
-			end
-			if ok and stats and stats.size > max_filesize then
-				return true
-			end
-		end,
-		additional_vim_regex_highlighting = false,
-	},
+vim.lsp.config('luals', {
+  cmd = {'lua-language-server'},
+  filetypes = {'lua'},
+  root_markers = {'.luarc.json', '.luarc.jsonc'},
 })
+vim.lsp.enable('luals')
+
+-- TypeScript
+vim.lsp.config('ts', {
+    on_attach = setupKeymaps,
+    filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
+    cmd = { "typescript-language-server", "--stdio" },
+})
+vim.lsp.enable('ts')
 
 ---------------------
 -- plugin settings --
 --------------------
+--------------------
+require("telescope")
 local hipatterns = require("mini.hipatterns")
 hipatterns.setup({
 	highlighters = {
@@ -304,10 +352,3 @@ require("orgmode").setup({
 -- colors
 require("colorscheme")
 vim.cmd("colorscheme tokyonight-night")
-
--- icons
-
--- local icons = require("mini.icons")
--- icons.setup()
-
-require("telescope")
