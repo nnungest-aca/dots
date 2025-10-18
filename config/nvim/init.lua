@@ -244,6 +244,9 @@ require("lazy").setup({
 		"akinsho/toggleterm.nvim",
 		version = "*",
 		config = true,
+        opts = {
+          shell = vim.o.shell,
+        },
 	},
 	-- ai completion: oatmeal
 	{

@@ -5,6 +5,7 @@ vim.diagnostic.enable = true -- enable diagnostics
 vim.diagnostic.config({
 	virtual_lines = true
 })
+vim.o.shell = "/opt/homebrew/bin/fish"
 vim.g.root_spec = { "cwd" } -- set root directory for LSP
 vim.o.showmatch = true -- show matching
 vim.o.ignorecase = true -- case insensitive
