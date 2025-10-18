@@ -109,3 +109,19 @@ vim.keymap.set("n", "<leader>tg", telebuiltin.git_files, { desc = "Git Files" })
 vim.keymap.set("n", "<leader>ts", telebuiltin.live_grep, { desc = "Live Grep" })
 vim.keymap.set("n", "<leader>tb", telebuiltin.buffers, { desc = "Buffers" })
 vim.keymap.set("n", "<leader>th", telebuiltin.help_tags, { desc = "Help Tags" })
+
+-- quittin time
+wk.add({ { "<leader>q", group = "Quit" } })
+vim.keymap.set("n", "<leader>qq", function()
+	if vim.bo.modified then
+		local choice = vim.fn.confirm("Do you want to save changes?", "&Yes\n&No\n&Cancel", 3)
+		if choice == 1 then
+			vim.cmd("w")
+			vim.cmd("q")
+		elseif choice == 2 then
+			vim.cmd("q!")
+		end
+	else
+		vim.cmd("q")
+	end
+end, { noremap = true, desc = "Quit" })
