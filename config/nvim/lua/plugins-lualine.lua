@@ -21,11 +21,11 @@ lualine.setup({
 				file_status = true, -- displays file status (readonly status, modified status)
 				path = 0, -- 0 = just filename, 1 = relative path, 2 = absolute path
 				symbols = {
-					modified = " [+]",
-					saved = " [Saved]",
-					readonly = " [-]",
-					unnamed = " [No Name]",
-					newfile = " [New]",
+					modified = " [UNSAVED]",
+					saved = " [SAVED]",
+					readonly = " [READONLY]",
+					unnamed = " [*unnamed*]",
+					newfile = " [*new*]",
 				},
 			},
 		},
