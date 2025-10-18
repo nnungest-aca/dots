@@ -59,6 +59,12 @@ vim.api.nvim_set_keymap("n", "<leader>cm", ":Marks<CR>", { noremap = true, desc 
 vim.api.nvim_set_keymap("n", "<leader>cg", ":Neogit<CR>", { noremap = true, desc = "Neogit" })
 vim.keymap.set("n", "<leader>cd", telebuiltin.lsp_definitions, { desc = "LSP Definitions" })
 vim.api.nvim_set_keymap("n", "<leader>ck", ":LspInfo<CR>", { noremap = true, silent = true, desc = "LSP Info" })
+vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", { noremap = true, desc = "LSP Hover" })
+wk.add({ { "<leader>cl", group = "LSP" } })
+vim.keymap.set("n", "<leader>cld", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true, desc = "LSP Definition" })
+vim.keymap.set("n", "<leader>clD", "<cmd>lua vim.lsp.buf.declaration()<CR>", { noremap = true, desc = "LSP Declare" })
+vim.keymap.set("n", "<leader>cli", "<cmd>lua vim.lsp.buf.implementation()<CR>", { noremap = true, desc = "LSP Implementation" })
+vim.keymap.set("n", "<leader>clr", "<cmd>lua vim.lsp.buf.references()<CR>", { noremap = true, desc = "LSP References" })
 
 -- custom
 wk.add({ { "<leader>v", group = "Custom" } })
