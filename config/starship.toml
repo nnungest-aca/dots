@@ -82,8 +82,6 @@ $battery\
 $time
 [❯ ](bold green)"""
 
-# when ready for venv patch, add $custom above $status.
-
 [aws]
     disabled = false
     format = "[ $symbol$profile/$region]($style)"
@@ -142,10 +140,6 @@ symbol = "◧ "
 format = " docker [$symbol$context]($style)"
 
 [directory]
-# home_symbol = "⌂"
-# truncation_length = 2
-# truncation_symbol = "□ "
-# read_only = " ◈"
 use_os_path_sep = true
 style = "italic blue"
 format = '[$path]($style)[$read_only]($read_only_style)'
@@ -258,33 +252,7 @@ symbol = "◨ "
 style = "dimmed yellow italic bold"
 disabled = true
 
-# FISH PYTHON // not working as id like it to, disabled for now
-# [custom.novenv]
-# description = "show indicator when venv is missing"
-# shell = ['fish', '-c']
-# command = """
-# if test -f "requirements.txt" -o -f "pyproject.toml" -o -f "poetry.lock" -o -d ".venv" -o -f "Pipfile"
-#     echo "(inactive)"
-# end
-# """
-# when = '''test -z "$VIRTUAL_ENV" '''
-# format = '[$output ](red)'
-
-# [custom.venv]
-# description = "Show qualified virtualenv dir, if not IN the dir tree where it is resides"
-# # from directory ../project-name/, . ~/some/other/.venv/bin/activate -- displays 'other/.venv'
-# # from directory .../other/src, .../other, etc. , -- displays just .venv
-# shell = ['fish', '-c']
-# command = """
-#     set -lx venv (path basename (path dirname (test -n "$VIRTUAL_ENV" && echo "$VIRTUAL_ENV")))
-#     test -n "$venv" && echo $venv
-#     """
-# when = '''test -n "$VIRTUAL_ENV" '''
-# format = '[\($output\)](bold green) '
-
-
 [python]
-# format = " [${symbol}]($style)[${version}${custom.venv}]($style)[${custom.novenv}](bold red) "
 format = ' [${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
 symbol = "[py](bold green)"
 version_format = "${raw}"
