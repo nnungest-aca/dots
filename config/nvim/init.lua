@@ -86,7 +86,7 @@ require("lazy").setup({
 		end,
 	},
 	-- project support
-	"ahmedkhalf/project.nvim",
+	-- using telescope-project.nvim (loaded above)
 	-- commenting
 	"numToStr/Comment.nvim",
 	-- autocomplete
@@ -128,93 +128,93 @@ require("lazy").setup({
 	-- 		})
 	-- 	end,
 	-- },
-       {
-        "hrsh7th/nvim-cmp",
-        version = false,
-        event = "InsertEnter",
-        dependencies = {
-        "hrsh7th/cmp-nvim-lsp",
-        "hrsh7th/cmp-buffer",
-        "hrsh7th/cmp-path",
-        },
-    opts = function()
-    -- Register nvim-cmp lsp capabilities
-    vim.lsp.config("*", { capabilities = require("cmp_nvim_lsp").default_capabilities() })
+	{
+		"hrsh7th/nvim-cmp",
+		version = false,
+		event = "InsertEnter",
+		dependencies = {
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-path",
+		},
+		opts = function()
+			-- Register nvim-cmp lsp capabilities
+			vim.lsp.config("*", { capabilities = require("cmp_nvim_lsp").default_capabilities() })
 
-    vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
-    local cmp = require("cmp")
-    local defaults = require("cmp.config.default")()
-    local auto_select = true
-    return {
-        auto_brackets = {}, -- configure any filetype to auto add brackets
-        completion = {
-        completeopt = "menu,menuone,noinsert" .. (auto_select and "" or ",noselect"),
-        },
-        preselect = auto_select and cmp.PreselectMode.Item or cmp.PreselectMode.None,
-        mapping = cmp.mapping.preset.insert({
-        ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-        ["<C-f>"] = cmp.mapping.scroll_docs(4),
-        ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-        ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-        ["<C-Space>"] = cmp.mapping.complete(),
-        ["<CR>"] = cmp.mapping.confirm({ select = auto_select }),
-        ["<C-y>"] = cmp.mapping.confirm({ select = true }),
-        ["<S-CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-        ["<C-CR>"] = function(fallback)
-            cmp.abort()
-            fallback()
-        end,
-        -- ["<tab>"] = function(fallback)
-        --     return cmp.map({ "snippet_forward", "ai_nes", "ai_accept" }, fallback)()
-        -- end,
-        -- }),
+			vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
+			local cmp = require("cmp")
+			local defaults = require("cmp.config.default")()
+			local auto_select = true
+			return {
+				auto_brackets = {}, -- configure any filetype to auto add brackets
+				completion = {
+					completeopt = "menu,menuone,noinsert" .. (auto_select and "" or ",noselect"),
+				},
+				preselect = auto_select and cmp.PreselectMode.Item or cmp.PreselectMode.None,
+				mapping = cmp.mapping.preset.insert({
+					["<C-b>"] = cmp.mapping.scroll_docs(-4),
+					["<C-f>"] = cmp.mapping.scroll_docs(4),
+					["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+					["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+					["<C-Space>"] = cmp.mapping.complete(),
+					["<CR>"] = cmp.mapping.confirm({ select = auto_select }),
+					["<C-y>"] = cmp.mapping.confirm({ select = true }),
+					["<S-CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+					["<C-CR>"] = function(fallback)
+						cmp.abort()
+						fallback()
+					end,
+					-- ["<tab>"] = function(fallback)
+					--     return cmp.map({ "snippet_forward", "ai_nes", "ai_accept" }, fallback)()
+					-- end,
+					-- }),
 
-        ["<tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_next_item()
-            else
-                fallback()
-            end
-        end, { "i", "s" }),
-        }),
-        sources = cmp.config.sources({
-        { name = "lazydev" },
-        { name = "nvim_lsp" },
-        { name = "path" },
-        }, {
-        { name = "buffer" },
-        }),
-        formatting = {
-        format = function(entry, item)
-            -- local icons = LazyVim.config.icons.kinds
-            -- if icons[item.kind] then
-            -- item.kind = icons[item.kind] .. item.kind
-            -- end
+					["<tab>"] = cmp.mapping(function(fallback)
+						if cmp.visible() then
+							cmp.select_next_item()
+						else
+							fallback()
+						end
+					end, { "i", "s" }),
+				}),
+				sources = cmp.config.sources({
+					{ name = "lazydev" },
+					{ name = "nvim_lsp" },
+					{ name = "path" },
+				}, {
+					{ name = "buffer" },
+				}),
+				formatting = {
+					format = function(entry, item)
+						-- local icons = LazyVim.config.icons.kinds
+						-- if icons[item.kind] then
+						-- item.kind = icons[item.kind] .. item.kind
+						-- end
 
-            local widths = {
-            abbr = vim.g.cmp_widths and vim.g.cmp_widths.abbr or 40,
-            menu = vim.g.cmp_widths and vim.g.cmp_widths.menu or 30,
-            }
+						local widths = {
+							abbr = vim.g.cmp_widths and vim.g.cmp_widths.abbr or 40,
+							menu = vim.g.cmp_widths and vim.g.cmp_widths.menu or 30,
+						}
 
-            for key, width in pairs(widths) do
-            if item[key] and vim.fn.strdisplaywidth(item[key]) > width then
-                item[key] = vim.fn.strcharpart(item[key], 0, width - 1) .. "…"
-            end
-            end
+						for key, width in pairs(widths) do
+							if item[key] and vim.fn.strdisplaywidth(item[key]) > width then
+								item[key] = vim.fn.strcharpart(item[key], 0, width - 1) .. "…"
+							end
+						end
 
-            return item
-        end,
-        },
-        experimental = {
-        -- only show ghost text when we show ai completions
-        ghost_text = vim.g.ai_cmp and {
-            hl_group = "CmpGhostText",
-        } or false,
-        },
-        sorting = defaults.sorting,
-    }
-    end,
-    },
+						return item
+					end,
+				},
+				experimental = {
+					-- only show ghost text when we show ai completions
+					ghost_text = vim.g.ai_cmp and {
+						hl_group = "CmpGhostText",
+					} or false,
+				},
+				sorting = defaults.sorting,
+			}
+		end,
+	},
 
 	-- lsp packages
 	{ "williamboman/mason.nvim" },
@@ -244,9 +244,9 @@ require("lazy").setup({
 		"akinsho/toggleterm.nvim",
 		version = "*",
 		config = true,
-        opts = {
-          shell = vim.o.shell,
-        },
+		opts = {
+			shell = vim.o.shell,
+		},
 	},
 	-- ai completion: oatmeal
 	{
@@ -270,27 +270,37 @@ require("toggleterm").setup({
 })
 
 -- LSP --
+vim.filetype.add({ extension = { ron = "ron" } })
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "ron",
+	callback = function() vim.bo.syntax = "rust" end,
+})
+vim.lsp.config("ron_lsp", {
+	cmd = { "ron-lsp" },
+	filetypes = { "ron" },
+	root_markers = { "Cargo.toml", ".git" },
+})
+vim.lsp.enable("ron_lsp")
 vim.lsp.config("lua_ls", {
 	cmd = { "lua-language-server" },
 	filetypes = { "lua" },
 	root_markers = { ".luarc.json", ".luarc.jsonc" },
-    settings = {
-        Lua = {
-            diagnostics = {
-                globals = { "vim" },
-            },
-        },
-    },
+	settings = {
+		Lua = {
+			diagnostics = {
+				globals = { "vim" },
+			},
+		},
+	},
 })
 vim.lsp.enable("lua_ls")
-
 -- TypeScript
-vim.lsp.config('ts', {
-    on_attach = setupKeymaps,
-    filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
-    cmd = { "typescript-language-server", "--stdio" },
+vim.lsp.config("ts", {
+	on_attach = setupKeymaps,
+	filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
+	cmd = { "typescript-language-server", "--stdio" },
 })
-vim.lsp.enable('ts')
+vim.lsp.enable("ts")
 
 ---------------------
 -- plugin settings --
@@ -332,12 +342,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 })
 
 -- projectile clone
-require("project_nvim").setup({
-	patterns = { ".git", ".git/", ".project", ".project/", ".projectile", "package.json", "Cargo.toml" },
-	detection_methods = { "lsp", "pattern" },
-	silent_chdir = true,
-})
-require("telescope").load_extension("projects")
+require("telescope").load_extension("project")
 -- lualine
 require("plugins-lualine")
 
